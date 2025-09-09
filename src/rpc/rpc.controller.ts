@@ -28,6 +28,26 @@ export class RpcController {
 
     try {
       switch (method) {
+        case 'discover': // MCP Client가 discover를 호출하면 툴 목록을 JSON-RPC 형식으로 응답
+          return {
+            jsonrpc: '2.0',
+            result: {
+              tools: [
+                {
+                  name: 'getWeather',
+                  description: '도시 이름을 받아 현재 날씨를 반환합니다.',
+                  input: {
+                    type: 'object',
+                    properties: {
+                      city: { type: 'string', description: '도시 이름 (예: seoul, tokyo)' }
+                    },
+                    required: ['city']
+                  }
+                }
+              ]
+            },
+            id
+          };
         case 'getWeather':
           const weather = await this.weatherService.getWeather(params.city);
           return { jsonrpc: '2.0', result: weather, id };
