@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { WeatherController } from './weather/weather.controller';
 import { WeatherService } from './weather/weather.service';
 import { RpcController } from './rpc/rpc.controller';
+import { WeatherModule } from './weather/weather.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
-  controllers: [AppController, WeatherController, RpcController],
-  providers: [AppService, WeatherService],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), WeatherModule],
+  controllers: [AppController, RpcController],
+  providers: [AppService],
 })
 export class AppModule {}
