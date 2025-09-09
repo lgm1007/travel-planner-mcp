@@ -9,4 +9,9 @@ export class WeatherController {
   async getWeather(@Param('city') city: string): Promise<any> {
     return this.weatherService.getWeather(city);
   }
+
+  @Get('/weather/:city/forecast/:days')
+  async getForecast(@Param('city') city: string, @Param('days') days: number): Promise<any> {
+    return this.weatherService.getForecast(city, days);
+  }
 }
