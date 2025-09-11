@@ -13,7 +13,7 @@ ChatGPT와 직접 연동하여 사용자가 원하는 도시와 일정에 맞는
 - **Language**: Node.js (>=18.x)
 - **Package Manager**: pnpm
 - **Protocol**: [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
-- **APIs**: OpenWeather, OpenTripMap (Free Tier)
+- **APIs**: OpenWeather, Geoapify
 
 ---
 
@@ -34,7 +34,7 @@ pnpm install
 
 ```bash
 OPENWEATHER_API_KEY=your_openweather_api_key
-OPENTRIPMAP_API_KEY=your_opentripmap_api_key
+GEOAPIFY_API_KEY=your_opentripmap_api_key
 PORT=3000
 ```
 

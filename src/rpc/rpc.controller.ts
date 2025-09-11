@@ -1,9 +1,13 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { WeatherService } from '../weather/weather.service';
+import { AttractionService } from '../attraction/attraction.service';
 
 @Controller()
 export class RpcController {
-  constructor(private readonly weatherService: WeatherService) {}
+  constructor(
+    private readonly weatherService: WeatherService,
+    private readonly attractionService: AttractionService,
+  ) {}
 
   /**
    * JSON-RPC 스타일, MCP에서 RPC 호출하여 사용
@@ -51,6 +55,9 @@ export class RpcController {
         case 'getWeather':
           const weather = await this.weatherService.getWeather(params.city);
           return { jsonrpc: '2.0', result: weather, id };
+        case 'getAttractions':
+          const attractions = await this.attractionService.getAttractions(params.city, params.limit || 10);
+          return { jsonrpc: '2.0', result: attractions, id };
         default:
           return { jsonrpc: '2.0', error: { code: -32601, message: 'Method not found' }, id };
       }
