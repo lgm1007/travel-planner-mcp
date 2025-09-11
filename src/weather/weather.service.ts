@@ -81,7 +81,10 @@ export class WeatherService {
         .map((date) => {
           const groupItems = grouped[date];
           // 날짜별 평균 기후 계산 (총합 / 동일 날짜 아이템 길이)
-          const avgTemp = groupItems.reduce((sum, item) => sum + item.main.temp, 0) / groupItems.length;
+          // 소수점 첫째 자리까지 반올림
+          const avgTemp = Math.round(
+            (groupItems.reduce((sum, item) => sum + item.main.temp, 0) / groupItems.length) * 10
+          ) / 10
 
           return {
             date,
