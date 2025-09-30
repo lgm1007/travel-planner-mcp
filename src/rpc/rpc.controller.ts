@@ -1,12 +1,14 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { WeatherService } from '../weather/weather.service';
 import { AttractionService } from '../attraction/attraction.service';
+import { TripService } from '../trip/trip.service';
 
 @Controller()
 export class RpcController {
   constructor(
     private readonly weatherService: WeatherService,
     private readonly attractionService: AttractionService,
+    private readonly tripService: TripService,
   ) {}
 
   /**
@@ -47,7 +49,43 @@ export class RpcController {
                     },
                     required: ['city']
                   }
-                }
+                },
+                {
+                  name: 'getForecast',
+                  description: '도시 이름과 일 수를 받아 도시별 일기예보를 반환합니다. (최대 5일)',
+                  input: {
+                    type: 'object',
+                    properties: {
+                      city: { type: 'string', description: '도시 이름 (예: seoul, tokyo)' },
+                      days: { type: 'number', description: '일 수 (최대 5, 최소 1)' }
+                    },
+                    required: ['city', 'days']
+                  }
+                },
+                {
+                  name: 'getAttractions',
+                  description: '도시 이름과 최대 조회 개수값을 받아 도시의 관광지를 특정 개수만큼 반환합니다.',
+                  input: {
+                    type: 'object',
+                    properties: {
+                      city: { type: 'string', description: '도시 이름 (예: seoul, tokyo)' },
+                      limit: { type: 'number', description: '최대 조회 개수' }
+                    },
+                    required: ['city', 'limit']
+                  }
+                },
+                {
+                  name: 'planTrip',
+                  description: '도시 이름과 일 수를 받아 날짜별로 도시의 관광지 정보와 날씨 요약 정보를 반환합니다.',
+                  input: {
+                    type: 'object',
+                    properties: {
+                      city: { type: 'string', description: '도시 이름 (예: seoul, tokyo)' },
+                      days: { type: 'number', description: '일 수 (최대 5, 최소 1)' }
+                    },
+                    required: ['city', 'days']
+                  }
+                },
               ]
             },
             id
@@ -55,9 +93,15 @@ export class RpcController {
         case 'getWeather':
           const weather = await this.weatherService.getWeather(params.city);
           return { jsonrpc: '2.0', result: weather, id };
+        case 'getForecast':
+          const forecast = await this.weatherService.getForecast(params.city, params.days);
+          return { jsonrpc: '2.0', result: forecast, id };
         case 'getAttractions':
           const attractions = await this.attractionService.getAttractions(params.city, params.limit || 10);
           return { jsonrpc: '2.0', result: attractions, id };
+        case 'planTrip':
+          const trip = await this.tripService.planTrip(params.city, params.days);
+          return { jsonrpc: '2.0', result: trip, id };
         default:
           return { jsonrpc: '2.0', error: { code: -32601, message: 'Method not found' }, id };
       }
